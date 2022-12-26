@@ -2,14 +2,21 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { SchoolService } from './school.service';
 import { CreateSchoolDto } from './dto/create-school.dto';
 import { UpdateSchoolDto } from './dto/update-school.dto';
+import { CreateNewsDto } from './dto/create-news.dto';
 
 @Controller('api/school')
 export class SchoolController {
   constructor(private readonly schoolService: SchoolService) {}
 
   @Post(':userId')
-  create(@Param('userId') userId: string, @Body() dto: CreateSchoolDto) {
-    let result = this.schoolService.create(+userId, dto);
+  createSchool(@Param('userId') userId: string, @Body() dto: CreateSchoolDto) {
+    let result = this.schoolService.createSchool(+userId, dto);
+    return result;
+  }
+
+  @Post('news/:userId')
+  createNews(@Param('userId') userId: string, @Body() dto: CreateNewsDto) {
+    let result = this.schoolService.createNews(+userId, dto);
     return result;
   }
 

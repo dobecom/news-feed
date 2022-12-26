@@ -1,6 +1,7 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserType } from './const/user-type.const';
+import { CreateNewsDto } from './dto/create-news.dto';
 import { CreateSchoolDto } from './dto/create-school.dto';
 import { UpdateSchoolDto } from './dto/update-school.dto';
 
@@ -8,7 +9,7 @@ import { UpdateSchoolDto } from './dto/update-school.dto';
 export class SchoolService {
   constructor(private prisma: PrismaService) {}
 
-  async create(userId: number, dto: CreateSchoolDto) {
+  async createSchool(userId: number, dto: CreateSchoolDto) {
     try {
       const user = await this.prisma.user.findFirst({
         select: {
@@ -46,6 +47,10 @@ export class SchoolService {
       console.log(`Create School Err : ${err.code}, ${err}`);
       throw err;
     }
+  }
+  createNews(userId:number, dto:CreateNewsDto){
+
+    return null;
   }
 
   findAll() {
