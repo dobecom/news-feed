@@ -3,6 +3,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { UserType } from './const/user-type.const';
 import { CreateNewsDto } from './dto/create-news.dto';
 import { CreateSchoolDto } from './dto/create-school.dto';
+import { UpdateNewsDto } from './dto/update-news.dto';
 import { UpdateSchoolDto } from './dto/update-school.dto';
 
 @Injectable()
@@ -98,8 +99,32 @@ export class SchoolService {
     return `This action returns a #${id} school`;
   }
 
-  update(id: number, updateSchoolDto: UpdateSchoolDto) {
-    return `This action updates a #${id} school`;
+  async updateNews(id: number, dto: UpdateNewsDto) {
+    try {
+      const news = await this.prisma.news.update({
+        select: {
+          title: true,
+        },
+        data: {
+          ...dto,
+        },
+        where: {
+          id,
+        },
+      });
+      let result = {
+        data: news.title,
+        message: 'The news was updated successfully',
+      };
+      return result;
+    } catch (err) {
+      if (err.code === 'P2025') {
+        console.log(`Update News Err (record not exist)`);
+      } else {
+        console.log(`Update News Err : ${err.code}, ${err}`);
+      }
+      throw err;
+    }
   }
 
   async removeNews(id: number) {

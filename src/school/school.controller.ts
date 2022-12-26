@@ -13,6 +13,8 @@ import { CreateSchoolDto } from './dto/create-school.dto';
 import { UpdateSchoolDto } from './dto/update-school.dto';
 import { CreateNewsDto } from './dto/create-news.dto';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { UpdateNewsDto } from './dto/update-news.dto';
+import { School } from './entities/school.entity';
 
 @ApiBearerAuth()
 @ApiTags('School')
@@ -49,8 +51,9 @@ export class SchoolController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSchoolDto: UpdateSchoolDto) {
-    return this.schoolService.update(+id, updateSchoolDto);
+  @ApiOperation({ summary: 'Update News' })
+  updateNews(@Param('id') id: string, @Body() dto: UpdateNewsDto) {
+    return this.schoolService.updateNews(+id, dto);
   }
 
   @Delete(':id')
