@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { SchoolService } from './school.service';
 import { CreateSchoolDto } from './dto/create-school.dto';
@@ -26,9 +27,13 @@ export class SchoolController {
     return result;
   }
 
-  @Post('news/:userId')
-  createNews(@Param('userId') userId: string, @Body() dto: CreateNewsDto) {
-    let result = this.schoolService.createNews(+userId, dto);
+  @Post('news/:userId/:schoolId')
+  createNews(
+    @Query('userId') userId: string,
+    @Query('schoolId') schoolId: string,
+    @Body() dto: CreateNewsDto,
+  ) {
+    let result = this.schoolService.createNews(+userId, +schoolId, dto);
     return result;
   }
 

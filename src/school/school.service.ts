@@ -9,7 +9,7 @@ import { UpdateSchoolDto } from './dto/update-school.dto';
 export class SchoolService {
   constructor(private prisma: PrismaService) {}
 
-  async createSchool(userId: number, dto: CreateSchoolDto) {
+  async checkIsAdminUser(userId: number) {
     try {
       const user = await this.prisma.user.findFirst({
         select: {
@@ -19,11 +19,22 @@ export class SchoolService {
           id: userId,
         },
       });
-
       if (!user) throw new ForbiddenException('The user is not exist');
-
-      let result = null;
+      let result = false;
       if (user.type === UserType.ADMIN) {
+        result = true;
+      }
+      return result;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async createSchool(userId: number, dto: CreateSchoolDto) {
+    let result;
+    try {
+      let isAdminUser = await this.checkIsAdminUser(userId);
+      if (isAdminUser) {
         let school = await this.prisma.school.create({
           data: {
             ...dto,
@@ -31,16 +42,15 @@ export class SchoolService {
         });
         result = {
           data: {
-            name: school.name,
-            location: school.location,
+            ...school,
           },
           message: 'The school was created successfully',
         };
         return result;
       } else {
         result = {
-          message: "The user don't have right to create a school"
-        }
+          message: "The user don't have right to create a school",
+        };
         return result;
       }
     } catch (err) {
@@ -48,9 +58,36 @@ export class SchoolService {
       throw err;
     }
   }
-  createNews(userId:number, dto:CreateNewsDto){
 
-    return null;
+  async createNews(userId: number, schoolId: number, dto: CreateNewsDto) {
+    try {
+      let result;
+      let isAdminUser = await this.checkIsAdminUser(userId);
+      if (isAdminUser) {
+        const news = await this.prisma.news.create({
+          select: {
+            title: true,
+          },
+          data: {
+            ...dto,
+            schoolId: schoolId,
+          },
+        });
+        result = {
+          data: news.title,
+          message: 'The news was created successfully',
+        };
+        return result;
+      } else {
+        result = {
+          message: "The user don't have right to create a school",
+        };
+        return result;
+      }
+    } catch (err) {
+      console.log(`Create News Err : ${err.code}, ${err}`);
+      throw err;
+    }
   }
 
   findAll() {
