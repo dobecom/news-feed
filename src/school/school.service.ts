@@ -102,7 +102,28 @@ export class SchoolService {
     return `This action updates a #${id} school`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} school`;
+  async removeNews(id: number) {
+    try {
+      const news = await this.prisma.news.delete({
+        select: {
+          title: true,
+        },
+        where: {
+          id,
+        },
+      });
+      let result = {
+        data: news.title,
+        message: 'The news was deleted successfully',
+      };
+      return result;
+    } catch (err) {
+      if (err.code === 'P2025') {
+        console.log(`Delete News Err (record not exist)`);
+      } else {
+        console.log(`Delete News Err : ${err.code}, ${err}`);
+      }
+      throw err;
+    }
   }
 }

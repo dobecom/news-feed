@@ -28,6 +28,7 @@ export class SchoolController {
   }
 
   @Post('news/:userId/:schoolId')
+  @ApiOperation({ summary: 'Create News' })
   createNews(
     @Query('userId') userId: string,
     @Query('schoolId') schoolId: string,
@@ -53,7 +54,8 @@ export class SchoolController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.schoolService.remove(+id);
+  @ApiOperation({ summary: 'Delete News' })
+  removeNews(@Param('id') id: string) {
+    return this.schoolService.removeNews(+id);
   }
 }
