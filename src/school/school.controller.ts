@@ -10,13 +10,10 @@ import {
 } from '@nestjs/common';
 import { SchoolService } from './school.service';
 import { CreateSchoolDto } from './dto/create-school.dto';
-import { UpdateSchoolDto } from './dto/update-school.dto';
 import { CreateNewsDto } from './dto/create-news.dto';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UpdateNewsDto } from './dto/update-news.dto';
-import { School } from './entities/school.entity';
 
-@ApiBearerAuth()
 @ApiTags('School')
 @Controller('api/school')
 export class SchoolController {

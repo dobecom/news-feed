@@ -1,11 +1,19 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('User')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
+
+  @Patch(':id/:schoolId')
+  @ApiOperation({ summary: 'Subscribe School' })
+  updateSubscribe(@Param('id') id: string, @Query('schoolId') schoolId: string) {
+    return this.userService.updateSubscribe(+id, +schoolId);
+  }
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {

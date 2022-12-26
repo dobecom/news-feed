@@ -49,6 +49,7 @@ export class SchoolService {
         };
         return result;
       } else {
+        // throw new BadRequestException("The user don't have right to create a school");
         result = {
           message: "The user don't have right to create a school",
         };
@@ -80,6 +81,7 @@ export class SchoolService {
         };
         return result;
       } else {
+        // throw new BadRequestException("The user don't have right to create a school");
         result = {
           message: "The user don't have right to create a school",
         };

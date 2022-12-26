@@ -16,7 +16,7 @@ model User {
 
   name String
   type String
-  schools School[]
+  subsSchoolIds Int[]
 }
 
 model School {
@@ -26,9 +26,6 @@ model School {
 
   name String
   location String
-
-  userId Int?
-  user User? @relation(fields: [userId], references: [id])
 
   news News[]
 }
