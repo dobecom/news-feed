@@ -3,13 +3,14 @@ import { SchoolService } from './school.service';
 import { CreateSchoolDto } from './dto/create-school.dto';
 import { UpdateSchoolDto } from './dto/update-school.dto';
 
-@Controller('school')
+@Controller('api/school')
 export class SchoolController {
   constructor(private readonly schoolService: SchoolService) {}
 
-  @Post()
-  create(@Body() createSchoolDto: CreateSchoolDto) {
-    return this.schoolService.create(createSchoolDto);
+  @Post(':userId')
+  create(@Param('userId') userId: string, @Body() dto: CreateSchoolDto) {
+    let result = this.schoolService.create(+userId, dto);
+    return result;
   }
 
   @Get()

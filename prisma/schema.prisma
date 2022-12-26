@@ -27,8 +27,8 @@ model School {
   name String
   location String
 
-  userId Int
-  user User @relation(fields: [userId], references: [id])
+  userId Int?
+  user User? @relation(fields: [userId], references: [id])
 
   news News[]
 }

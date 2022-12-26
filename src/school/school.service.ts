@@ -1,11 +1,51 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { UserType } from './const/user-type.const';
 import { CreateSchoolDto } from './dto/create-school.dto';
 import { UpdateSchoolDto } from './dto/update-school.dto';
 
 @Injectable()
 export class SchoolService {
-  create(createSchoolDto: CreateSchoolDto) {
-    return 'This action adds a new school';
+  constructor(private prisma: PrismaService) {}
+
+  async create(userId: number, dto: CreateSchoolDto) {
+    try {
+      const user = await this.prisma.user.findFirst({
+        select: {
+          type: true,
+        },
+        where: {
+          id: userId,
+        },
+      });
+
+      if (!user) throw new ForbiddenException('The user is not exist');
+
+      let result = null;
+      if (user.type === UserType.ADMIN) {
+        let school = await this.prisma.school.create({
+          data: {
+            ...dto,
+          },
+        });
+        result = {
+          data: {
+            name: school.name,
+            location: school.location,
+          },
+          message: 'The school was created successfully',
+        };
+        return result;
+      } else {
+        result = {
+          message: "The user don't have right to create a school"
+        }
+        return result;
+      }
+    } catch (err) {
+      console.log(`Create School Err : ${err.code}, ${err}`);
+      throw err;
+    }
   }
 
   findAll() {
