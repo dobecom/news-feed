@@ -49,7 +49,7 @@ $ npm run test:cov
 ## API 명세
 
 URL : http://localhost:3000/v1/doc/
-![image](https://user-images.githubusercontent.com/90499822/209685153-73c58448-4526-48c7-8699-e71e7f618810.png)
+<img width="851" alt="image" src="https://user-images.githubusercontent.com/90499822/209687147-5a702d68-1dca-4882-b671-47bbbf4580e6.png">
 
 ## ERD 설계
 
