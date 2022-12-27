@@ -4,7 +4,6 @@ import { UserType } from './const/user-type.const';
 import { CreateNewsDto } from './dto/create-news.dto';
 import { CreateSchoolDto } from './dto/create-school.dto';
 import { UpdateNewsDto } from './dto/update-news.dto';
-import { UpdateSchoolDto } from './dto/update-school.dto';
 
 @Injectable()
 export class SchoolService {
