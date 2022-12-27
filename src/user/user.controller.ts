@@ -18,11 +18,13 @@ export class UserController {
   }
 
   @Get(':id/school')
+  @ApiOperation({ summary: 'Get Subscribed School List' })
   getSubscribedSchools(@Param('id') id: string) {
     return this.userService.getSubscribedSchools(+id);
   }
 
   @Get(':id/school/news')
+  @ApiOperation({ summary: 'Get Subscribed School\'s News List ' })
   getSubscribedSchoolsNews(@Param('id') id: string) {
     return this.userService.getSubscribedSchoolsNews(+id);
   }
