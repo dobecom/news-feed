@@ -37,16 +37,6 @@ export class SchoolController {
     return result;
   }
 
-  @Get()
-  findAll() {
-    return this.schoolService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.schoolService.findOne(+id);
-  }
-
   @Patch(':id')
   @ApiOperation({ summary: 'Update News' })
   updateNews(@Param('id') id: string, @Body() dto: UpdateNewsDto) {

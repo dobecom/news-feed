@@ -93,14 +93,6 @@ export class SchoolService {
     }
   }
 
-  findAll() {
-    return `This action returns all school`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} school`;
-  }
-
   async updateNews(id: number, dto: UpdateNewsDto) {
     try {
       const news = await this.prisma.news.update({

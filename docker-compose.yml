@@ -10,5 +10,12 @@ services:
       POSTGRES_DB: news-feed
     networks:
       - news-feed
+  redis:
+    image: redis:latest
+    hostname: news-feed-redis
+    ports:
+      - 6379:6379
+    networks:
+      - news-feed
 networks:
   news-feed:
