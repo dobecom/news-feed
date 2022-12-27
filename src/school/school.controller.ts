@@ -36,13 +36,13 @@ export class SchoolController {
     return result;
   }
 
-  @Patch(':id')
+  @Patch('news/:id')
   @ApiOperation({ summary: 'Update News' })
   updateNews(@Param('id') id: string, @Body() dto: UpdateNewsDto) {
     return this.schoolService.updateNews(+id, dto);
   }
 
-  @Delete(':id')
+  @Delete('news/:id')
   @ApiOperation({ summary: 'Delete News' })
   removeNews(@Param('id') id: string) {
     return this.schoolService.removeNews(+id);

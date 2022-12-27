@@ -8,7 +8,7 @@ async function bootstrap() {
     .setTitle('News Feed')
     .setDescription('News Feed API specification')
     .setVersion('1.0')
-    .addTag('news feed')
+    .addTag('News Feed API Specification')
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
