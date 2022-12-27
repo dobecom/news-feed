@@ -206,7 +206,7 @@ export class UserService {
 
       // 구독 해제 학교의 뉴스 목록을 redis에서 불러옴
       const unsubSchoolList = await this.redis.lrangeAll(`${id}-Unsub-Schools`);
-      let unsubSchoolNewsList = [];
+      let unsubSchoolNewsList = []; 
       for await (const schoolId of unsubSchoolList) {
         const news = await this.redis.get(`${id}-${schoolId}`);
         await JSON.parse(news).map((e)=>{
