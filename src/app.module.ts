@@ -1,9 +1,8 @@
 import { RedisModule } from '@liaoliaots/nestjs-redis';
-import { CacheModule, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { RedisConfigService } from './cache/cache.config';
+import { CacheModule } from './cache/cache.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { SchoolModule } from './school/school.module';
 import { UserModule } from './user/user.module';
@@ -15,7 +14,7 @@ import { UserModule } from './user/user.module';
     }),
     SchoolModule,
     UserModule,
-    PrismaModule,
+    PrismaModule, 
     RedisModule.forRootAsync({
       imports: [ConfigModule],
       useClass: RedisConfigService,
@@ -23,7 +22,5 @@ import { UserModule } from './user/user.module';
     }),
     CacheModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}

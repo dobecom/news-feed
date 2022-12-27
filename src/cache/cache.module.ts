@@ -3,8 +3,8 @@ import { CacheService } from './cache.service';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 
 @Module({
-  imports:[RedisModule],
+  imports: [RedisModule],
   providers: [CacheService],
-  exports:[CacheService]
+  exports: [CacheService]
 })
 export class CacheModule {}

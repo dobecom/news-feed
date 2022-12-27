@@ -75,6 +75,28 @@ export class UserService {
             data: school.name,
             message: 'Unsubscription was completed successfully',
           };
+
+          // 현 시점 해당 학교의 News를 모두 Redis에 저장
+          const news = await this.prisma.news.findMany({
+            select: {
+              id: true,
+              createdAt: true,
+              title: true,
+              content: true,
+              schoolId: true,
+            },
+            where: {
+              schoolId,
+            },
+          });
+          // 구독 해제 한 학교 id를 key로, 해당 학교 news를 임시 저장
+          // key = userId-schoolId
+          // value = news json stringify
+          this.redis.set(`${id}-${schoolId}`, JSON.stringify(news));
+          // 구독 해제 한 학교 id 리스트를 저장
+          // key = userId-Unsub-Schools
+          // value = id list
+          this.redis.lpush(`${id}-Unsub-Schools`, schoolId.toString());
           return result;
         } else {
           result = {
@@ -154,6 +176,10 @@ export class UserService {
     }
   }
 
+  async getRedisNewsList(id: number, schoolId: number) {
+    return await this.redis.get(`${id}-${schoolId}`);
+  }
+
   async getSubscribedSchoolsNews(id: number) {
     let result;
     try {
@@ -177,9 +203,30 @@ export class UserService {
           },
         ],
       });
-      if (news.length > 0) {
+
+      // 구독 해제 학교의 뉴스 목록을 redis에서 불러옴
+      const unsubSchoolList = await this.redis.lrangeAll(`${id}-Unsub-Schools`);
+      let unsubSchoolNewsList = [];
+      for await (const schoolId of unsubSchoolList) {
+        const news = await this.redis.get(`${id}-${schoolId}`);
+        await JSON.parse(news).map((e)=>{
+          unsubSchoolNewsList.push({
+            ...e,
+            createdAt:new Date(e.createdAt),
+          });
+        })
+      }
+
+      let integratedNews = [...unsubSchoolNewsList,...news];
+      integratedNews = integratedNews.sort(function(a,b){
+        // typescript에서 Date 연산 시, Date 값을 연산할 수 없어서 TS2363에러 발생
+        // 단항 연산자 +를 지정하여 해결
+        return +new Date(b.createdAt)- +new Date(+a.createdAt);
+      });
+
+      if (integratedNews.length > 0) {
         result = {
-          data: news,
+          data: integratedNews,
           message: 'Get all subscribed schools news was completed successfully',
         };
         return result;
