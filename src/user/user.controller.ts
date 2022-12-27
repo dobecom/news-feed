@@ -9,13 +9,14 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Patch(':id/:schoolId')
-  @ApiOperation({ summary: 'Subscribe School' })
+  @Patch(':id/:schoolId/:updateType')
+  @ApiOperation({ summary: 'Subscribe / Unsubscribe School' })
   updateSubscribe(
     @Param('id') id: string,
     @Query('schoolId') schoolId: string,
+    @Query('updateType') updateType: string,
   ) {
-    return this.userService.updateSubscribe(+id, +schoolId);
+    return this.userService.updateSubscribe(+id, +schoolId, updateType);
   }
 
   @Get(':id/school')

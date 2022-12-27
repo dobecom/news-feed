@@ -1,5 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { UpdateType } from './const/update-type.const';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
@@ -7,7 +8,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
-  async updateSubscribe(id: number, schoolId: number) {
+  async updateSubscribe(id: number, schoolId: number, updateType: string) {
     let result;
     try {
       // 학교 id 존재 하는지 확인
@@ -28,27 +29,62 @@ export class UserService {
         },
       });
 
-      if (res.subsSchoolIds.includes(schoolId)) {
-        //이미 구독 중인 경우
-        // throw new BadRequestException("Already subscribed");
-        result = {
-          message: 'Already subscribed',
-        };
-        return result;
-      } else {
-        const update = await this.prisma.user.update({
-          data: {
-            subsSchoolIds: {
-              push: schoolId, // prisma ORM list add 방법
+      let isSubscribed = res.subsSchoolIds.includes(schoolId);
+
+      if (updateType === UpdateType.ADD) {
+        // 학교 구독하기
+        if (isSubscribed) {
+          //이미 구독 중인 경우
+          // throw new BadRequestException("Already subscribed");
+          result = {
+            message: 'Already subscribed',
+          };
+          return result;
+        } else {
+          const update = await this.prisma.user.update({
+            data: {
+              subsSchoolIds: {
+                push: schoolId, // prisma ORM list add 방법
+              },
             },
-          },
-          where: {
-            id,
-          },
-        });
+            where: {
+              id,
+            },
+          });
+          result = {
+            data: school.name,
+            message: 'Subscription was completed successfully',
+          };
+          return result;
+        }
+      } else if (updateType === UpdateType.DELETE) {
+        //학교 구독 해제하기
+        if (isSubscribed) {
+          let subscribedList = res.subsSchoolIds;
+          let filteredList = subscribedList.filter((e) => e !== schoolId);
+          const update = await this.prisma.user.update({
+            data: {
+              subsSchoolIds: filteredList,
+            },
+            where: {
+              id,
+            },
+          });
+          result = {
+            data: school.name,
+            message: 'Unsubscription was completed successfully',
+          };
+          return result;
+        } else {
+          result = {
+            message: 'The school is already not subscribed',
+          };
+          return result;
+        }
+      } else {
+        // 구독 또는 구독해제 파라미터가 잘못된 경우
         result = {
-          data: school.name,
-          message: 'Subscription was completed successfully',
+          message: 'updateType should be add or delete',
         };
         return result;
       }
