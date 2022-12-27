@@ -98,16 +98,14 @@ export class UserService {
     }
   }
 
-  async getSubscribedSchools(id: number) {
-    let result;
-
+  async getSchools(userId: number) {
     try {
       const user = await this.prisma.user.findFirst({
         select: {
           subsSchoolIds: true,
         },
         where: {
-          id,
+          id: userId,
         },
       });
       if (!user) throw new ForbiddenException('The user is not exist');
@@ -117,6 +115,7 @@ export class UserService {
           id: true,
           name: true,
           location: true,
+          news: true,
         },
         where: {
           id: {
@@ -124,6 +123,18 @@ export class UserService {
           },
         },
       });
+      return schools;
+    } catch (err) {
+      console.log(`Get Schools Err : ${err.code}, ${err}`);
+      throw err;
+    }
+  }
+
+  async getSubscribedSchools(id: number) {
+    let result;
+
+    try {
+      const schools = await this.getSchools(id);
       if (schools.length > 0) {
         result = {
           data: schools,
@@ -137,7 +148,48 @@ export class UserService {
 
       return result;
     } catch (err) {
-      console.log(`User Subscribe School Err : ${err.code}, ${err}`);
+      console.log(`Get Subscribed Schools Err : ${err.code}, ${err}`);
+      throw err;
+    }
+  }
+
+  async getSubscribedSchoolsNews(id: number) {
+    let result;
+    try {
+      const schools = await this.getSchools(id);
+      const news = await this.prisma.news.findMany({
+        select: {
+          id: true,
+          createdAt: true,
+          title: true,
+          content: true,
+          schoolId: true,
+        },
+        where: {
+          schoolId: {
+            in: schools.map((e) => e.id),
+          },
+        },
+        orderBy: [
+          {
+            createdAt: 'desc',
+          },
+        ],
+      });
+      if (news.length > 0) {
+        result = {
+          data: news,
+          message: 'Get all subscribed schools news was completed successfully',
+        };
+        return result;
+      } else {
+        result = {
+          message: 'No news here',
+        };
+        return result;
+      }
+    } catch (err) {
+      console.log(`Get Subscribe Schools News Err : ${err.code}, ${err}`);
       throw err;
     }
   }

@@ -24,6 +24,11 @@ export class UserController {
     return this.userService.getSubscribedSchools(+id);
   }
 
+  @Get(':id/school/news')
+  getSubscribedSchoolsNews(@Param('id') id: string) {
+    return this.userService.getSubscribedSchoolsNews(+id);
+  }
+
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
