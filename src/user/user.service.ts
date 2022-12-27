@@ -201,6 +201,28 @@ export class UserService {
           },
         ],
       });
+      // 뉴스피드 페이징 처리 - 페이징 처리 시, 기존 구독해제 학교의 소식 조회와 중복되는 문제 발생
+      // const news = await this.prisma.news.findMany({
+      //   select: {
+      //     id: true,
+      //     createdAt: true,
+      //     title: true,
+      //     content: true,
+      //     schoolId: true,
+      //   },
+      //   skip: page * count,
+      //   take: count,
+      //   where: {
+      //     schoolId: {
+      //       in: schools.map((e) => e.id),
+      //     },
+      //   },
+      //   orderBy: [
+      //     {
+      //       createdAt: 'desc',
+      //     },
+      //   ],
+      // });
 
       // 구독 해제 학교의 뉴스 목록을 redis에서 불러옴
       const unsubSchoolList = await this.redis.lrangeAll(`${id}-Unsub-Schools`);
