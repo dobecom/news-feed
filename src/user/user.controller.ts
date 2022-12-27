@@ -5,14 +5,22 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('User')
-@Controller('user')
+@Controller('api/user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Patch(':id/:schoolId')
   @ApiOperation({ summary: 'Subscribe School' })
-  updateSubscribe(@Param('id') id: string, @Query('schoolId') schoolId: string) {
+  updateSubscribe(
+    @Param('id') id: string,
+    @Query('schoolId') schoolId: string,
+  ) {
     return this.userService.updateSubscribe(+id, +schoolId);
+  }
+
+  @Get(':id/school')
+  getSubscribedSchools(@Param('id') id: string) {
+    return this.userService.getSubscribedSchools(+id);
   }
 
   @Post()

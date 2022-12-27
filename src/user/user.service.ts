@@ -34,6 +34,7 @@ export class UserService {
         result = {
           message: 'Already subscribed',
         };
+        return result;
       } else {
         const update = await this.prisma.user.update({
           data: {
@@ -46,9 +47,7 @@ export class UserService {
           },
         });
         result = {
-          // data: {
-          //   update,
-          // },
+          data: school.name,
           message: 'Subscription was completed successfully',
         };
         return result;
@@ -59,6 +58,50 @@ export class UserService {
       } else {
         console.log(`User Subscribe School Err : ${err.code}, ${err}`);
       }
+      throw err;
+    }
+  }
+
+  async getSubscribedSchools(id: number) {
+    let result;
+
+    try {
+      const user = await this.prisma.user.findFirst({
+        select: {
+          subsSchoolIds: true,
+        },
+        where: {
+          id,
+        },
+      });
+      if (!user) throw new ForbiddenException('The user is not exist');
+
+      const schools = await this.prisma.school.findMany({
+        select: {
+          id: true,
+          name: true,
+          location: true,
+        },
+        where: {
+          id: {
+            in: user.subsSchoolIds.map((schoolId) => schoolId),
+          },
+        },
+      });
+      if (schools.length > 0) {
+        result = {
+          data: schools,
+          message: 'Get all subscribed schools was completed successfully',
+        };
+      } else {
+        result = {
+          message: 'No subscribed schools',
+        };
+      }
+
+      return result;
+    } catch (err) {
+      console.log(`User Subscribe School Err : ${err.code}, ${err}`);
       throw err;
     }
   }
