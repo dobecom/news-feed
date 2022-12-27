@@ -206,22 +206,23 @@ export class UserService {
 
       // 구독 해제 학교의 뉴스 목록을 redis에서 불러옴
       const unsubSchoolList = await this.redis.lrangeAll(`${id}-Unsub-Schools`);
-      let unsubSchoolNewsList = []; 
+      let unsubSchoolNewsList = [];
       for await (const schoolId of unsubSchoolList) {
         const news = await this.redis.get(`${id}-${schoolId}`);
-        await JSON.parse(news).map((e)=>{
+        await JSON.parse(news).map((e) => {
+          // JSON stringify로 Date가 문자열 처리되는 것을 Date 타입으로 복구하여 저장
           unsubSchoolNewsList.push({
             ...e,
-            createdAt:new Date(e.createdAt),
+            createdAt: new Date(e.createdAt),
           });
-        })
+        });
       }
 
-      let integratedNews = [...unsubSchoolNewsList,...news];
-      integratedNews = integratedNews.sort(function(a,b){
+      let integratedNews = [...unsubSchoolNewsList, ...news];
+      integratedNews = integratedNews.sort(function (a, b) {
         // typescript에서 Date 연산 시, Date 값을 연산할 수 없어서 TS2363에러 발생
         // 단항 연산자 +를 지정하여 해결
-        return +new Date(b.createdAt)- +new Date(+a.createdAt);
+        return +new Date(b.createdAt) - +new Date(+a.createdAt);
       });
 
       if (integratedNews.length > 0) {
