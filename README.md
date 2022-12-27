@@ -13,6 +13,15 @@ $ docker compose up dev-db -d
 $ docker compose up redis -d
 ```
 
+.env 파일 설정</br>
+```typescript
+DATABASE_URL="postgresql://postgres:<YOUR_DB_PASSWORD>@localhost:5434/news-feed?schema=public"
+REDIS_HOSTNAME="localhost"
+REDIS_PORT="6379"
+REDIS_EXPIRATION_SEC="3600"
+```
+
+
 ## Running the app
 
 ```bash
