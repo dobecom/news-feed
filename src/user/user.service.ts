@@ -50,6 +50,11 @@ export class UserService {
               id,
             },
           });
+
+          // 구독 시, 구독 해제로 인해 저장된 redis key를 삭제
+          this.redis.del(`${id}-${schoolId}`);
+          this.redis.lrem(`${id}-Unsub-Schools`, '1', schoolId.toString());
+
           result = {
             data: school.name,
             message: 'Subscription was completed successfully',

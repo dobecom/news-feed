@@ -37,6 +37,14 @@ export class CacheService {
     return this.redis.set(key, value, 'EX', expire ?? this.DEFAULT_EXPIRATION);
   }
 
+  del(key: string) {
+    return this.redis.del(key);
+  }
+
+  lrem(key: string, count: string, element: string) {
+    return this.redis.lrem(key, count, element);
+  }
+
   // async del(key: string): Promise<number> {
   //   return this.redis.del(key);
   // }
