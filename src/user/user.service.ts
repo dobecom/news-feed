@@ -2,10 +2,25 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CacheService } from '../cache/cache.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateType } from './const/update-type.const';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()
 export class UserService {
   constructor(private prisma: PrismaService, private redis: CacheService) {}
+
+  async createUser(dto:CreateUserDto){
+    try{
+      const user = this.prisma.user.create({
+        data:{
+          ...dto
+        }
+      })
+      return user;
+    }catch(err){
+      console.log(err)
+      throw err
+    }
+  }
 
   async updateSubscribe(id: number, schoolId: number, updateType: string) {
     let result;
