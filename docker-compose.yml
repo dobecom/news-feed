@@ -10,6 +10,16 @@ services:
       POSTGRES_DB: news-feed
     networks:
       - news-feed
+  test-db:
+    image: postgres:13
+    ports:
+      - 5435:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1111
+      POSTGRES_DB: news-feed
+    networks:
+      - news-feed
   redis:
     image: redis:latest
     hostname: news-feed-redis

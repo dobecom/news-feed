@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { CacheService } from 'src/cache/cache.service';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { CacheService } from '../cache/cache.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { UpdateType } from './const/update-type.const';
 
 @Injectable()

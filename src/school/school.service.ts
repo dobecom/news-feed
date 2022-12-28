@@ -1,5 +1,5 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { UserType } from './const/user-type.const';
 import { CreateNewsDto } from './dto/create-news.dto';
 import { CreateSchoolDto } from './dto/create-school.dto';
