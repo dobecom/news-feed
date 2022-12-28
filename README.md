@@ -6,11 +6,11 @@
 
 ```bash
 $ yarn
-$ npx prisma generate
 $ docker pull redis:latest
 $ docker pull postgresql:13
 $ docker compose up dev-db -d
 $ docker compose up redis -d
+$ npx prisma generate
 ```
 
 .env 파일 설정</br>
